@@ -10,6 +10,23 @@ class Support(commands.Cog):
         self.bot = bot
         self.start_time = time.time()
 
+    @commands.Cog.listener()
+    async def on_guild_join(self, guild: discord.Guild):
+        channel = guild.system_channel
+        if channel is None:
+            for c in guild.text_channels:
+                if "general" in c.name:
+                    channel = c
+                    break
+
+        if channel:
+            embed = discord.Embed(
+                title="👋 Hello Everyone!",
+                description="Thanks for adding me to your server! I'm here to help. Use `/robus_help` to see my commands.",
+                color=discord.Color.blue()
+            )
+            await channel.send(embed=embed)
+
     @app_commands.command(name="robus_about", description="View bot statistics, performance, and useful links.")
     async def robus_about(self, interaction: discord.Interaction):
         links = {
